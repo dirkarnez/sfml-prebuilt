@@ -5,7 +5,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: git clone SFML
-        run: git clone https://github.com/SFML/SFML.git
+        run: git clone --branch 2.5.1 https://github.com/SFML/SFML.git
 
       - name: cmake SFML
         shell: cmd
