@@ -10,7 +10,7 @@ jobs:
     name: Create Release
     runs-on: windows-latest
     env:
-      mingwTargetZip: sfml-${{ env.GITHUB_REF_NAME }}-mingw.zip
+      mingwTargetZip: sfml-${{ env:GITHUB_REF_NAME }}-mingw.zip
     steps:
       - name: git clone SFML
         run: git clone --branch 2.5.1 https://github.com/SFML/SFML.git
@@ -28,13 +28,13 @@ jobs:
         with:
           type: 'zip'
           path: "SFML/build"
-          filename: "${{ env.mingwTargetZip }}"
+          filename: "${{ env:mingwTargetZip }}"
           exclusions: '*.git* /*node_modules/* .editorconfig'
           
       - name: Release prebuilt
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "${{ env.mingwTargetZip }}"
+          artifacts: "${{ env:mingwTargetZip }}"
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
