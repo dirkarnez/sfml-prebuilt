@@ -9,7 +9,7 @@ jobs:
 
       - name: cmake SFML
         shell: cmd
-        run: cd SFML && cmake.exe -G"MinGW Makefiles" -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX="%~dp0build/sfml" -B./build
+        run: cd SFML && cmake.exe -G"MinGW Makefiles" -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX="build/sfml" -B./build
       
       - name: mingw build 
         shell: cmd
@@ -19,6 +19,6 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: SFML-prebuilt
-          path:  SFML\build\sfml
+          path: SFML\build\sfml
 
         
