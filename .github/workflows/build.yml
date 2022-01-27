@@ -7,5 +7,16 @@ jobs:
       - name: git clone SFML
         run: git clone https://github.com/SFML/SFML.git
       
-      - name: test
-        run: cd SFML && dir
+      - name: cd SFML
+        run: cd SFML
+
+      - name: cmake SFML
+        shell: cmd
+        run: cmake.exe -G"MinGW Makefiles" -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX="%~dp0build/sfml"  -B./build
+      
+      - name: cd build
+        run: cd build
+        
+      - name: mingw build
+        shell: cmd
+        run: mingw32-make install
