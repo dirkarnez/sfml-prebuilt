@@ -1,7 +1,13 @@
-name: sfml-prebuilt-actions-workflow
-on: push
+name: sfml-prebuilt-release-actions-workflow
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+
 jobs:
-  test:
+  build:
+    name: Create Release
     runs-on: windows-latest
     steps:
       - name: git clone SFML
@@ -15,10 +21,17 @@ jobs:
         shell: cmd
         run: cd SFML\build && mingw32-make install
         
-      - name: release prebuilt
-        uses: actions/upload-artifact@v2
+      - name: Release prebuilt
+        uses: ncipollo/release-action@v1
         with:
-          name: SFML-prebuilt
-          path: SFML\build
+          artifacts: "SFML\build"
+          token: ${{ secrets.GITHUB_TOKEN }}
 
+          
+          
+          
+          
+          
+          
+        
         
