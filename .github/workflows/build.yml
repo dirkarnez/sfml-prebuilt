@@ -9,6 +9,8 @@ jobs:
   build:
     name: Create Release
     runs-on: windows-latest
+    env:
+      mingwTargetZip: sfml-${{ env.GITHUB_REF_NAME }}-mingw.zip
     steps:
       - name: git clone SFML
         run: git clone --branch 2.5.1 https://github.com/SFML/SFML.git
@@ -21,10 +23,18 @@ jobs:
         shell: cmd
         run: cd SFML\build && mingw32-make install
         
+      - name: Archive Release
+        uses: thedoctor0/zip-release@master
+        with:
+          type: 'zip'
+          path: "SFML/build"
+          filename: "${{ env.mingwTargetZip }}"
+          exclusions: '*.git* /*node_modules/* .editorconfig'
+          
       - name: Release prebuilt
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "SFML/build"
+          artifacts: "${{ env.mingwTargetZip }}"
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
