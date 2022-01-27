@@ -9,11 +9,9 @@ jobs:
 
       - name: cmake SFML
         shell: cmd
-        run: cd SFML && cmake.exe -G"MinGW Makefiles" -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX="%~dp0build/sfml"  -B./build
+        run: cd SFML && cmake.exe -G"MinGW Makefiles" -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX="%~dp0build/sfml" -B./build
       
-      - name: cd build
-        run: cd build
-        
-      - name: mingw build
+      - name: mingw build 
         shell: cmd
-        run: mingw32-make install
+        run: cd SFML\build && mingw32-make install
+        
