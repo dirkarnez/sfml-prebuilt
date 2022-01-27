@@ -1,0 +1,11 @@
+name: sfml-prebuilt-actions-workflow
+on: push
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - name: git clone SFML
+        run: git clone https://github.com/SFML/SFML.git
+      
+      - name: test
+        run: cd SFML && dir
