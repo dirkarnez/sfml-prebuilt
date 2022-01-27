@@ -10,7 +10,7 @@ jobs:
     name: Create Release
     runs-on: windows-latest
     env:
-      mingwTargetZip: sfml-${{ GITHUB_REF_NAME }}-mingw.zip
+      mingwTargetZip: sfml-${{ github.ref_name }}-mingw.zip
     steps:
       - name: git clone SFML
         run: git clone --branch 2.5.1 https://github.com/SFML/SFML.git
