@@ -15,3 +15,10 @@ jobs:
         shell: cmd
         run: cd SFML\build && mingw32-make install
         
+      - name: release prebuilt
+        uses: actions/upload-artifact@v2
+        with:
+          name: SFML-prebuilt
+          path:  SFML\build\sfml
+
+        
