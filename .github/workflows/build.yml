@@ -25,6 +25,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "SFML\build"
+          allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
           
