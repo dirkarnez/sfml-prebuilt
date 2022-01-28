@@ -12,7 +12,7 @@ set(BUILD_SHARED_LIBS FALSE)
 # set(SFML_USE_STATIC_STD_LIBS FALSE)
 # "P:/Downloads/gopath/src/github.com/dirkarnez/cpk/cpp_libraries/sfml-v2.5.1-mingw/SFML/build/sfml/lib/cmake/SFML"
 
-find_package(SFML 2.5.1 EXACT PATHS {{.CMakeConfigFilePath}})
+find_package(SFML 2.5.1 EXACT PATHS "{{.CMakeConfigFilePath}}")
 
 foreach (component ${SFML_FIND_COMPONENTS})
     string(TOUPPER "${component}" UPPER_COMPONENT)
