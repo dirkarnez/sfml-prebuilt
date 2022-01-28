@@ -11,7 +11,7 @@ set(BUILD_SHARED_LIBS FALSE)
 # set(SFML_INSTALL_PKGCONFIG_FILES FALSE)
 # set(SFML_USE_STATIC_STD_LIBS FALSE)
 
-find_package(SFML 2.5.1 EXACT PATHS "{{.Location}}/sfml-v2.5.1-mingw/SFML/build/sfml/lib/cmake/SFML")
+find_package(SFML 2.5.1 EXACT PATHS "{{.Location}}/SFML/build/sfml/lib/cmake/SFML") #/sfml-v2.5.1-mingw
 
 foreach (component ${SFML_FIND_COMPONENTS})
     string(TOUPPER "${component}" UPPER_COMPONENT)
