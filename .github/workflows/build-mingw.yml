@@ -8,22 +8,33 @@ on:
 
 jobs:
   build:
-    name: Create Release
-    runs-on: windows-2019
+    strategy:
+      matrix:
+        compiler:
+        - {
+            name: "x86_64-8.1.0-release-posix-seh-rt_v6-rev0",
+            url: "https://github.com/dirkarnez/cpp-tools/raw/main/x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z"
+          }
+        - {
+            name: "winlibs-x86_64-posix-seh-gcc-11.2.0-mingw-w64-9.0.0-r1",
+            url: "https://github.com/brechtsanders/winlibs_mingw/releases/download/11.2.0-12.0.1-9.0.0-r1/winlibs-x86_64-posix-seh-gcc-11.2.0-mingw-w64-9.0.0-r1.zip"
+          }
+    runs-on: windows-latest
     env:
       libraryName: SFML
       cmakeInstallationPath: SFML-installation
-      tagName: 2.5.1 # target tag
-      mingwTargetZip: SFML-${{ github.ref_name }}-x86_64-posix-seh-rev0-8.1.0.zip
+      tagName: 2.6.0
     steps:
       - name: git clone
         shell: cmd
         run: git clone --recursive https://github.com/SFML/SFML.git && cd SFML && git checkout ${{ env.tagName }}
        
-      - name: curl x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z
+      - name: download compiler
         shell: cmd
-        run:  cd /d ${{ github.workspace }} && curl https://github.com/2641797006/c/blob/master/GCC-zip/x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z?raw=true -L --output x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z && dir && 7z.exe x x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z
-        
+        run: |
+          curl ${{ matrix.compiler.url }} -L --output compiler &&^
+          7z.exe x compiler
+          
       - name: curl cmake-3.24.0-windows-x86_64.zip
         shell: cmd
         run: cd /d ${{ github.workspace }} && curl https://github.com/Kitware/CMake/releases/download/v3.24.0/cmake-3.24.0-windows-x86_64.zip -L --output cmake-3.24.0-windows-x86_64.zip && dir && 7z.exe x cmake-3.24.0-windows-x86_64.zip
@@ -35,20 +46,25 @@ jobs:
             ${{ github.workspace }}\mingw64;^
             ${{ github.workspace }}\mingw64\bin;^
             ${{ github.workspace }}\cmake-3.24.0-windows-x86_64\bin;
+            set CD_LINUX=%CD:\=/%
             gcc --version &&^
-            cd SFML && cmake.exe -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX="build/${{ env.cmakeInstallationPath }}" -B./build &&^
-            cd build && cmake --build . && cmake --install . 
+            cd SFML &&^
+            cmake.exe -G"MinGW Makefiles" ^
+            -DCMAKE_BUILD_TYPE=Release ^
+            -DBUILD_SHARED_LIBS=OFF ^
+            -DCMAKE_INSTALL_PREFIX="cmake-build/${{ env.cmakeInstallationPath }}" -B./cmake-build &&^
+            cd cmake-build && cmake --build . && cmake --install . 
         
       - name: Archive Release
         uses: thedoctor0/zip-release@master
         with:
           type: 'zip'
-          directory: "SFML/build/${{ env.cmakeInstallationPath }}"
-          filename: "${{ env.mingwTargetZip }}"
+          directory: "SFML/cmake-build/${{ env.cmakeInstallationPath }}"
+          filename: "sfml-${{ github.ref_name }}-${{ matrix.compiler.name }}.zip"
         
       - name: Release prebuilt
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "SFML/build/${{ env.cmakeInstallationPath }}/${{ env.mingwTargetZip }}"
+          artifacts: "SFML/cmake-build/${{ env.cmakeInstallationPath }}/sfml-${{ github.ref_name }}-${{ matrix.compiler.name }}.zip"
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
